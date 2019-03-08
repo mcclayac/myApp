@@ -49,7 +49,12 @@ $
 $ docker service ps getstartedpythonlab_web
 
 # Take down the app
-docker stack rm getstartedpythonlab
+$ docker stack rm getstartedpythonlab
+$ docker stack rm getstartedpythonlab
+Removing service getstartedpythonlab_web
+Removing network getstartedpythonlab_webnet
+
+
 
 # List Services
 $ docker service ls
@@ -70,6 +75,16 @@ flsibeuudjyk        getstartedpythonlab_web.1   mcclayac/get-started:part2   lin
 plb0twqwkrvd        getstartedpythonlab_web.3   mcclayac/get-started:part2   linuxkit-025000000001   Running             Running 31 minutes ago
 kphdj68q42qi        getstartedpythonlab_web.4   mcclayac/get-started:part2   linuxkit-025000000001   Running             Running 31 minutes ago
 js168go7y1vx        getstartedpythonlab_web.5   mcclayac/get-started:part2   linuxkit-025000000001   Running             Running 31 minutes ago
+
+
+On Mac or Linux the command is:
+# disconnect from machine
+  eval $(docker-machine env -u)
+
+# Start the docker machine
+$ docker-machine start machine
+$ docker-machine start machine
+
 
 # Curl Multiple Times
 #!/bin/bash
@@ -92,7 +107,7 @@ done
 
 
 # Take Down the Swam
-docker swarm leave --force
+$ docker swarm leave --force
 
 
 # Setup Swam
@@ -108,8 +123,224 @@ To add a worker to this swarm, run the following command:
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 
 10.0.0.129
+10.0.0.129
 
-docker swarm join --token SWMTKN-1-2z26uftqx5ru32764m7pd6itl4t0a0s9kfeijgb4nl8m4mtc7d-2obngusa2u8pb3ri4lrjaz3mw 192.168.65.3:2377
+$ docker swarm init
+Swarm initialized: current node (phvwc54yomanvz0nrw9kci83h) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-3278b3ccdliurzeoadfrqeh2ueqnyr79p5fez3wbmlm0z4pr8o-68122u001u3bcdu22xsh4mv9z 192.168.65.3:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+$ ifconfig | grep 192
+	inet 192.168.99.1 netmask 0xffffff00 broadcast 192.168.99.255
+
+# Create Machines
+$ docker-machine create --driver virtualbox myvm1
+$ docker-machine create --driver virtualbox myvm2
+$ docker-machine create --driver virtualbox myvm3
+$ docker-machine create --driver virtualbox myvm4
+
+
+# SSh into each machine
+$ docker-machine ssh myvm1
+$ docker-machine ssh myvm2
+$ docker-machine ssh myvm3
+$ docker-machine ssh myvm4
+
+# List the Docker machines
+# Use this command to list the machines and get their IP addresses.
+$ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+myvm1   -        virtualbox   Running   tcp://192.168.99.100:2376           v18.09.3
+myvm2   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.3
+myvm3   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.3
+myvm4   -        virtualbox   Running   tcp://192.168.99.103:2376           v18.09.3
+
+
+# View the nodes in a swarm
+docker@myvm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+lzjbijuhyld2m7c3hyugzvml1 *   myvm1               Ready               Active              Leader              18.09.3
+eeont1rpf9d76dprsmalsiwqo     myvm2               Ready               Active                                  18.09.3
+umn6nm3m6a3cjncwbb3w091s0     myvm3               Ready               Active                                  18.09.3
+laqwfbrz9fz9aelkvzl3enpfc     myvm4               Ready               Active                                  18.09.3
+
+##
+## If you want to start over, you can run docker swarm leave from each node.
+##
+
+# Run this command to configure your shell:
+# eval $(docker-machine env myvm1)
+$ eval $(docker-machine env myvm1)
+
+Anthonys-MacBook-Pro:myApp mcclayac$ eval $(docker-machine env myvm1)
+Anthonys-MacBook-Pro:myApp mcclayac$ eval $(docker-machine env myvm2)
+Anthonys-MacBook-Pro:myApp mcclayac$ eval $(docker-machine env myvm3)
+Anthonys-MacBook-Pro:myApp mcclayac$ eval $(docker-machine env myvm4)
+Anthonys-MacBook-Pro:myApp mcclayac$
+
+# Run docker-machine ls to verify that myvm1 is now the active machine, as indicated by the asterisk next to it.
+$ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+myvm1   *        virtualbox   Running   tcp://192.168.99.100:2376           v18.09.3
+myvm2   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.3
+myvm3   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.3
+myvm4   -        virtualbox   Running   tcp://192.168.99.103:2376           v18.09.3
+---------------------------------------------------
+
+# Start 4 Docker machines
+docker-machine start myvm1
+docker-machine start myvm2
+docker-machine start myvm3
+docker-machine start myvm4
+
+# Stop 4 Docker Machines
+docker-machine stop myvm1
+docker-machine stop myvm2
+docker-machine stop myvm3
+docker-machine stop myvm4
+
+$ eval $(docker-machine env myvm1)
+Anthonys-MacBook-Pro:myApp mcclayac$ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+myvm1   *        virtualbox   Running   tcp://192.168.99.100:2376           v18.09.3
+myvm2   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.3
+myvm3   -        virtualbox   Running   tcp://192.168.99.102:2376           v18.09.3
+myvm4   -        virtualbox   Running   tcp://192.168.99.103:2376           v18.09.3
+
+# ssh into first machine
+$ docker-machine ssh myvm1
+$ docker-machine ssh myvm1
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+docker@myvm1:~$
+
+$ docker swarm init --advertise-addr 192.168.99.100
+Swarm initialized: current node (t6vp34yulk4nwsu4dzuays4dr) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-56r641aagabfx40qfw17cgp4zuj5ycygmp1pv9oqfjfzcj11iv-a2xowcf1fxu4biozo7kcl3v0o 192.168.99.100:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+
+$ docker-machine ssh myvm1 "docker swarm leave"
+$ docker-machine ssh myvm2 "docker swarm leave"
+$ docker-machine ssh myvm3 "docker swarm leave"
+$ docker-machine ssh myvm4 "docker swarm leave"
+
+
+$ docker-machine ssh myvm1 "docker swarm join --token SWMTKN-1-56r641aagabfx40qfw17cgp4zuj5ycygmp1pv9oqfjfzcj11iv-a2xowcf1fxu4biozo7kcl3v0o 192.168.99.100:2377"
+$ docker-machine ssh myvm2 "docker swarm join --token SWMTKN-1-56r641aagabfx40qfw17cgp4zuj5ycygmp1pv9oqfjfzcj11iv-a2xowcf1fxu4biozo7kcl3v0o 192.168.99.100:2377"
+$ docker-machine ssh myvm3 "docker swarm join --token SWMTKN-1-56r641aagabfx40qfw17cgp4zuj5ycygmp1pv9oqfjfzcj11iv-a2xowcf1fxu4biozo7kcl3v0o 192.168.99.100:2377"
+$ docker-machine ssh myvm4 "docker swarm join --token SWMTKN-1-56r641aagabfx40qfw17cgp4zuj5ycygmp1pv9oqfjfzcj11iv-a2xowcf1fxu4biozo7kcl3v0o 192.168.99.100:2377"
+
+
+
+
+
+# Deploy to the cluster swam
+$ docker stack deploy -c docker-compose.yml getstartedpythonlab
+Creating network getstartedpythonlab_webnet
+Creating service getstartedpythonlab_web
+
+#  Vesify application is deployed throuch cluster
+$ docker stack ps getstartedpythonlab
+ID                  NAME                         IMAGE                        NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+rlwpp74bmncb        getstartedpythonlab_web.1    mcclayac/get-started:part2   myvm3               Running             Running 2 minutes ago
+fx6z50ovqozu        getstartedpythonlab_web.2    mcclayac/get-started:part2   myvm2               Running             Running 2 minutes ago
+zqxlxeih6432        getstartedpythonlab_web.3    mcclayac/get-started:part2   myvm3               Running             Running 2 minutes ago
+u3aqk4ox7cku        getstartedpythonlab_web.4    mcclayac/get-started:part2   myvm4               Running             Running 2 minutes ago
+qwc7g78g9p1n        getstartedpythonlab_web.5    mcclayac/get-started:part2   myvm2               Running             Running 2 minutes ago
+j8798lfhfyws        getstartedpythonlab_web.6    mcclayac/get-started:part2   myvm2               Running             Running 2 minutes ago
+jhmry0u6zhbw        getstartedpythonlab_web.7    mcclayac/get-started:part2   myvm1               Running             Running 2 minutes ago
+svuedswoys03        getstartedpythonlab_web.8    mcclayac/get-started:part2   myvm3               Running             Running 2 minutes ago
+pbvggfbgbrgb        getstartedpythonlab_web.9    mcclayac/get-started:part2   myvm4               Running             Running 2 minutes ago
+hd0l4fygd3ls        getstartedpythonlab_web.10   mcclayac/get-started:part2   myvm1               Running             Running 2 minutes ago
+
+# Stoper the docker machines vm-ware
+$ docker-machine stop  myvm1
+$ docker-machine stop  myvm2
+$ docker-machine stop  myvm3
+$ docker-machine stop  myvm4
+
+
+
+
+
+version: "3"
+services:
+  web:
+    # replace username/repo:tag with your name and image details
+    image: mcclayac/get-started:part2
+    deploy:
+      replicas: 10
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "4000:80"
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "/home/docker/data:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: redis-server --appendonly yes
+    networks:
+      - webnet
+networks:
+  webnet:
+
+
+
+# re-Deploy the Application
+docker stack deploy -c docker-compose.yml getstartedpythonlab
+
+
+Make the data directory on the host on the myvm1
+$ docker-machine ssh myvm1 "mkdir ./data"
+
+
+# List the Services
+$ docker service ls
+ID                  NAME                             MODE                REPLICAS            IMAGE                             PORTS
+2v8hhzg6llhx        getstartedpythonlab_redis        replicated          1/1                 redis:latest                      *:6379->6379/tcp
+z4fganlwgmk5        getstartedpythonlab_visualizer   replicated          1/1                 dockersamples/visualizer:stable   *:8080->8080/tcp
+xlte3o953sy2        getstartedpythonlab_web          replicated          10/10               mcclayac/get-started:part2        *:4000->80/tcp
+
+
+
+
+
+
+
+
 
 
 
