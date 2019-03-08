@@ -44,8 +44,8 @@ To add a worker to this swarm, run the following command:
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 
 
-# Deploy to Swam
-$ docker stack deploy -c docker-compose.yml getstartedpythonlab
+# Deploy to Swamdocker-machine ls
+$
 $ docker service ps getstartedpythonlab_web
 
 # Take down the app
@@ -81,6 +81,16 @@ while [  $COUNTER -lt 30 ]; do
 done
 
 
+10.0.0.129
+COUNTER=0
+while [  $COUNTER -lt 10 ]; do
+ echo The counter is $COUNTER
+ curl -4  http://10.0.0.129:4000
+ let COUNTER=COUNTER+1
+done
+
+
+
 # Take Down the Swam
 docker swarm leave --force
 
@@ -96,6 +106,8 @@ To add a worker to this swarm, run the following command:
     docker swarm join --token SWMTKN-1-1ce15c2k6ytekw5y5elp98c9rsn70kc6c6pxdb9wvscuuviiia-c20m41i87byvpimgv61nu9iod 192.168.65.3:2377
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+10.0.0.129
 
 
 
